@@ -12,8 +12,9 @@
 ![Rust](https://img.shields.io/badge/Port%20of-Catode32-DEA584?style=flat-square&logo=rust&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
 ![Status](https://img.shields.io/badge/Status-Active-success?style=flat-square)
+![Lite](https://img.shields.io/badge/Lite-v1-orange?style=flat-square)
 
-[Repository](https://github.com/soumyajitxedu/ESP32-NEON-OS) · [Report Issue](https://github.com/soumyajitxedu/ESP32-NEON-OS/issues) · [Credits](#contributions--credits)
+[Repository](https://github.com/soumyajitxedu/ESP32-NEON-OS) · [Lite Branch](https://github.com/soumyajitxedu/ESP32-NEON-OS/tree/main/lite) · [Report Issue](https://github.com/soumyajitxedu/ESP32-NEON-OS/issues) · [Credits](#contributions--credits)
 
 </div>
 
@@ -36,9 +37,11 @@
 
 ## About
 
-ESP32 NEON OS is a complete, self-contained operating system for the ESP32 microcontroller. It combines a radial home menu, a suite of utility apps, three classic games, and a fully-featured virtual pet inspired by the open-source Rust project [Catode32](https://github.com/moonbench/catode32).
+ESP32 NEON OS is a complete, self-contained operating system for the ESP32 microcontroller. It combines a radial home menu, a suite of utility apps, classic games, and a fully-featured virtual pet inspired by the open-source Rust project [Catode32](https://github.com/moonbench/catode32).
 
-The system runs on any standard ESP32 with 4MB flash, requiring only an SSD1306 OLED display and four tactile push buttons. Everything is written in C++ using the Arduino framework.
+The system runs on any standard ESP32 with **4 MB flash**, requiring only an SSD1306 OLED display and four tactile push buttons. Everything is written in C++ using the Arduino framework.
+
+> **🆕 Lite Branch v1** — A stripped-down, power-efficient variant focused on **games**, **low SRAM usage**, and **fast boot**. See the [Lite Branch](#lite-branch-v1) section below.
 
 ---
 
@@ -103,6 +106,8 @@ The system runs on any standard ESP32 with 4MB flash, requiring only an SSD1306 
 | **Dino Runner** | Endless runner with jumping and ducking | Coins, Focus, Fitness |
 | **Tetris** | Block-stacking with hard drop and levels | Coins, Focus, Playfulness |
 | **Snake** | Smooth snake with particles and shake | Coins, Playfulness, Sociability |
+| **Space Shooter** | Vertical shooter with parallax stars | — |
+| **Pong** | Classic paddle game with difficulty levels | — |
 
 ---
 
@@ -150,6 +155,64 @@ Select from **Settings → Wallpaper**. Saved to NVS.
 | LEFT | GPIO 27 |
 | RIGHT | GPIO 26 |
 
+**Corrected Wokwi Diagram** — Buttons and OLED wired cleanly, no overlapping routes:
+
+<div align="center">
+
+<img src="https://github.com/soumyajitxedu/ESP32-NEON-OS/blob/main/assets/image%20(1).png" width="600"/>
+
+*Fixed wiring layout — buttons in a row, OLED to the right, GND shared via GND.1*
+
+</div>
+
+---
+
+## Lite Branch v1
+
+> **Source:** [github.com/soumyajitxedu/ESP32-NEON-OS/tree/main/lite](https://github.com/soumyajitxedu/ESP32-NEON-OS/tree/main/lite)  
+> **File:** [`lite/v1.cpp`](https://github.com/soumyajitxedu/ESP32-NEON-OS/blob/main/lite/v1.cpp)
+
+A **single-file, power-optimized** rewrite of NEON OS. Designed for **classroom use**, **low battery drain**, and **maximum game performance**.
+
+### What's different
+
+| | Full Build | Lite v1 |
+|---|---|---|
+| **CPU** | 240 MHz | **80 MHz** (lower power) |
+| **WiFi** | Present | **Disabled** (no WiFi stack) |
+| **Apps** | 7 (Vault, Profile, Life, etc.) | **2** (Timer, Sleep) |
+| **Games** | 3 | **5** (Shooter, Pong, Dino, Tetris, Snake) |
+| **Wallpapers** | 2 (Tanjiro + Cat Night) | **1** (Cat Night) |
+| **Boot time** | ~2 s | **~1.2 s** |
+| **SRAM footprint** | Full Cat Pet simulation | **Stripped** (no pet, no vault) |
+| **Self-repair** | None | **Auto-fix on low heap** |
+| **Diagnostics** | Basic | **Full** (heap, battery, loop, logs) |
+| **Logs** | None | **24-entry ring buffer** |
+| **Boot counter** | None | **Auto-cleanup every 12 boots** |
+
+### What Lite keeps
+
+- All **5 games** — Space Shooter, Pong (with Easy/Medium/Hard), Dino, Tetris, Snake.
+- **8×8 PROGMEM icons** for every menu entry.
+- **Battery monitoring** via ADC (pin 34).
+- **Diagnostics** — 3 pages: Memory, CPU, Battery.
+- **Event logs** — boots, game starts, memory fixes, reboots.
+- **Memory tools** — manual auto-fix, clear logs, wipe tmp NVS.
+
+### Bug fixes in Lite v1
+
+- **Shooter:** health clamped (never negative), fire on rising edge only, bullets spawn at ship nose, collision uses full bullet height.
+- **Pong:** no double-scoring, difficulty scaling added.
+- **Snake:** capped at 100 segments, no particles/shake.
+
+### What Lite removes
+
+- Cat Pet (all sprites, simulation, icons).
+- Vault, Profile, Life, Screensaver.
+- Animated wallpapers.
+- Orbit home menu animation.
+- WiFi stack entirely.
+
 ---
 
 ## Libraries
@@ -191,13 +254,13 @@ https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32
 
 **4. Install required libraries** via Library Manager
 
-**5. Open** `Catode_NEON_ESP32.ino`
+**5. Open** `Catode_NEON_ESP32.ino` (full) or `lite/v1.cpp` (Lite)
 
 **6. Configure GPIO pins** if wired differently
 
 **7. Upload** to your ESP32
 
-**8. First boot:** Follow the adoption scene to select your cat
+**8. First boot:** Follow the adoption scene to select your cat (full build only)
 
 ---
 
@@ -210,6 +273,7 @@ https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32
 | **Original Project** | [moonbench/catode32](https://github.com/moonbench/catode32) |
 | **Secondary Reference** | [Mrmad092/Codes](https://github.com/Mrmad092/Codes) |
 | **This Repository** | [soumyajitxedu/ESP32-NEON-OS](https://github.com/soumyajitxedu/ESP32-NEON-OS) |
+| **Lite Branch** | [lite/v1.cpp](https://github.com/soumyajitxedu/ESP32-NEON-OS/blob/main/lite/v1.cpp) |
 
 </div>
 
@@ -240,6 +304,7 @@ Dragon wallpaper assets sourced from Pinterest.
 | Cat Pet Integration | September 28, 2026 |
 | Complex Behaviors & Gardening | October 1, 2026 |
 | Scene Integration & Polish | October 4, 2026 |
+| **Lite Branch v1** | **October 11, 2026** |
 | **Total Active Development** | **8–12 hours** |
 
 ---
@@ -248,7 +313,7 @@ Dragon wallpaper assets sourced from Pinterest.
 
 **Built with C++, Arduino, and AI assistance**
 
-*From August 24 to October 4, 2026*
+*From August 24 to October 11, 2026*
 
 </div>
 
@@ -258,5 +323,6 @@ Dragon wallpaper assets sourced from Pinterest.
 
 Provided as-is for educational and hobbyist use. All original Catode32 assets remain property of their respective creators.
 
-
 ---
+
+**GitHub:** [soumyajitxedu/ESP32-NEON-OS](https://github.com/soumyajitxedu/ESP32-NEON-OS) · **Lite:** [main/lite](https://github.com/soumyajitxedu/ESP32-NEON-OS/tree/main/lite)
