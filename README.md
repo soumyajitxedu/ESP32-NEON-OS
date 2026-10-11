@@ -323,6 +323,18 @@ Dragon wallpaper assets sourced from Pinterest.
 
 Provided as-is for educational and hobbyist use. All original Catode32 assets remain property of their respective creators.
 
+
+This version is under preview. Both v3.3 (full build) and Lite v1 are currently in preview state. Known issues include:
+
+Bugs in various features
+
+Optimization issues
+
+Game errors and edge-case crashes
+
+Please consider this before installing. Feedback, bug reports, and pull requests are welcome. Stability is not guaranteed — treat both branches as works-in-progress.
+
+
 ---
 
 **GitHub:** [soumyajitxedu/ESP32-NEON-OS](https://github.com/soumyajitxedu/ESP32-NEON-OS) · **Lite:** [main/lite](https://github.com/soumyajitxedu/ESP32-NEON-OS/tree/main/lite)
